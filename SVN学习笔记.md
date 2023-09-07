@@ -559,3 +559,214 @@ Checkout只在第一次链接时操作一次，以后如果进行更新操作可
 
 ## Commit
 
+提交操作，相当于git的`git commit`
+
+提交本地数据到服务器端
+
+
+
+先在项目目录下创建2个文件a.java和b.txt
+
+```sh
+echo "public class AiFaceApiBO {
+    public AiFaceApiBO() {
+    }
+}
+" > a.java
+```
+
+```sh
+echo "123456
+123456
+123456" > b.txt
+```
+
+
+
+```sh
+PS C:\Users\mao\Desktop\test> echo "public class AiFaceApiBO {
+>>     public AiFaceApiBO() {
+>>     }
+>> }
+>> " > a.java
+PS C:\Users\mao\Desktop\test> echo "123456
+>> 123456
+>> 123456" > b.txt
+PS C:\Users\mao\Desktop\test> ls
+
+
+    目录: C:\Users\mao\Desktop\test
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          2023/9/7     10:14            130 a.java
+-a----          2023/9/7     10:14             46 b.txt
+
+
+PS C:\Users\mao\Desktop\test>
+```
+
+
+
+创建完成后，在项目目录点击鼠标右键，选择svn提交
+
+![image-20230907101601114](img/SVN学习笔记/image-20230907101601114.png)
+
+
+
+![image-20230907101636370](img/SVN学习笔记/image-20230907101636370.png)
+
+
+
+![image-20230907101720254](img/SVN学习笔记/image-20230907101720254.png)
+
+
+
+![image-20230907101733858](img/SVN学习笔记/image-20230907101733858.png)
+
+
+
+现在更改b.txt文件的内容
+
+![image-20230907101934889](img/SVN学习笔记/image-20230907101934889.png)
+
+再次点击提交
+
+![image-20230907102025637](img/SVN学习笔记/image-20230907102025637.png)
+
+
+
+![image-20230907102040245](img/SVN学习笔记/image-20230907102040245.png)
+
+
+
+
+
+
+
+
+
+## Update
+
+创建一个目录test2，在test2目录下使用检出功能，模拟另一个用户操作
+
+![image-20230907104757462](img/SVN学习笔记/image-20230907104757462.png)
+
+
+
+![image-20230907104809215](img/SVN学习笔记/image-20230907104809215.png)
+
+
+
+
+
+此时test2目录下有2个文件
+
+```sh
+PS C:\Users\mao\Desktop\test2> ls
+
+
+    目录: C:\Users\mao\Desktop\test2
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          2023/9/7     10:47            130 a.java
+-a----          2023/9/7     10:47             46 b.txt
+
+
+PS C:\Users\mao\Desktop\test2> cat .\b.txt
+123456
+123456
+1234567
+PS C:\Users\mao\Desktop\test2>
+```
+
+
+
+更改b.txt文件的内容
+
+![image-20230907105256692](img/SVN学习笔记/image-20230907105256692.png)
+
+
+
+添加一个文件c.txt
+
+```sh
+echo "123" > c.txt
+```
+
+
+
+提交
+
+![image-20230907105632421](img/SVN学习笔记/image-20230907105632421.png)
+
+
+
+![image-20230907105645292](img/SVN学习笔记/image-20230907105645292.png)
+
+
+
+此时test2目录下的版本为3，服务器最新版本为3，但是test目录下的版本为2，test目录需要更新
+
+
+
+![image-20230907110052417](img/SVN学习笔记/image-20230907110052417.png)
+
+
+
+
+
+![image-20230907110115708](img/SVN学习笔记/image-20230907110115708.png)
+
+
+
+
+
+右键点击更新
+
+![image-20230907110140236](img/SVN学习笔记/image-20230907110140236.png)
+
+
+
+![image-20230907110206565](img/SVN学习笔记/image-20230907110206565.png)
+
+
+
+
+
+```sh
+PS C:\Users\mao\Desktop\test> ls
+
+
+    目录: C:\Users\mao\Desktop\test
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          2023/9/7     10:14            130 a.java
+-a----          2023/9/7     11:01             50 b.txt
+-a----          2023/9/7     11:01             12 c.txt
+
+
+PS C:\Users\mao\Desktop\test> cat .\b.txt
+123456
+123456
+123456789
+PS C:\Users\mao\Desktop\test> cat .\c.txt
+123
+PS C:\Users\mao\Desktop\test>
+```
+
+
+
+
+
+
+
+
+
+# 图标集
+
