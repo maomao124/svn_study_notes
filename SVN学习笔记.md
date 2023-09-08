@@ -1614,3 +1614,261 @@ C:\Windows\System32>
 
 # 钩子程序
 
+## 概述
+
+所谓钩子就是与一些版本库事件触发的程序，例如新修订版本的创建，或是未版本化属性的修改。
+
+默认情况下，钩子的子目录(版本仓库/hooks/)中包含各种版本库钩子模板
+
+```sh
+PS D:\webApp\Shop> ls
+
+
+    目录: D:\webApp\Shop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----          2023/9/7      9:28                conf
+d-----          2023/9/7     16:44                db
+d-----          2023/9/7      9:28                hooks
+d-----          2023/9/7      9:28                locks
+-ar---          2023/9/7      9:28              2 format
+-a----          2023/9/7      9:28            251 README.txt
+
+
+PS D:\webApp\Shop> cd .\hooks\
+PS D:\webApp\Shop\hooks> ls
+
+
+    目录: D:\webApp\Shop\hooks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          2023/9/7      9:28           2651 post-commit.tmpl
+-a----          2023/9/7      9:28           2780 post-lock.tmpl
+-a----          2023/9/7      9:28           3008 post-revprop-change.tmpl
+-a----          2023/9/7      9:28           2609 post-unlock.tmpl
+-a----          2023/9/7      9:28           4051 pre-commit.tmpl
+-a----          2023/9/7      9:28           3690 pre-lock.tmpl
+-a----          2023/9/7      9:28           3516 pre-revprop-change.tmpl
+-a----          2023/9/7      9:28           3370 pre-unlock.tmpl
+-a----          2023/9/7      9:28           3763 start-commit.tmpl
+
+
+
+PS D:\webApp\Shop\hooks> cat .\post-commit.tmpl
+#!/bin/sh
+
+# POST-COMMIT HOOK
+#
+# The post-commit hook is invoked after a commit.  Subversion runs
+# this hook by invoking a program (script, executable, binary, etc.)
+# named 'post-commit' (for which this file is a template) with the
+# following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] REV          (the number of the revision just committed)
+#   [3] TXN-NAME     (the name of the transaction that has become REV)
+#
+# Because the commit has already completed and cannot be undone,
+# the exit code of the hook program is ignored.  The hook program
+# can use the 'svnlook' utility to help it examine the
+# newly-committed tree.
+#
+# The default working directory for the invocation is undefined, so
+# the program should set one explicitly if it cares.
+#
+# On a Unix system, the normal procedure is to have 'post-commit'
+# invoke other programs to do the real work, though it may do the
+# work itself too.
+#
+# Note that 'post-commit' must be executable by the user(s) who will
+# invoke it (typically the user httpd runs as), and that user must
+# have filesystem-level permission to access the repository.
+#
+# On a Windows system, you should name the hook program
+# 'post-commit.bat' or 'post-commit.exe',
+# but the basic idea is the same.
+#
+# The hook program runs in an empty environment, unless the server is
+# explicitly configured otherwise.  For example, a common problem is for
+# the PATH environment variable to not be set to its usual value, so
+# that subprograms fail to launch unless invoked via absolute path.
+# If you're having unexpected problems with a hook program, the
+# culprit may be unusual (or missing) environment variables.
+#
+# CAUTION:
+# For security reasons, you MUST always properly quote arguments when
+# you use them, as those arguments could contain whitespace or other
+# problematic characters. Additionally, you should delimit the list
+# of options with "--" before passing the arguments, so malicious
+# clients cannot bootleg unexpected options to the commands your
+# script aims to execute.
+# For similar reasons, you should also add a trailing @ to URLs which
+# are passed to SVN commands accepting URLs with peg revisions.
+#
+# Here is an example hook script, for a Unix /bin/sh interpreter.
+# For more examples and pre-written hooks, see those in
+# the Subversion repository at
+# http://svn.apache.org/repos/asf/subversion/trunk/tools/hook-scripts/ and
+# http://svn.apache.org/repos/asf/subversion/trunk/contrib/hook-scripts/
+
+
+REPOS="$1"
+REV="$2"
+TXN_NAME="$3"
+
+mailer.py commit "$REPOS" "$REV" /path/to/mailer.conf
+PS D:\webApp\Shop\hooks>
+```
+
+
+
+
+
+钩子程序默认情况可以采用批处理指令或Shell指令来进行编写
+
+
+
+
+
+## 通过批处理指令编写钩子程序
+
+1. 复制post-commit.tmpl为post-commit.bat文件
+2. 填入相关批处理指令
+
+![image-20230908155931074](img/SVN学习笔记/image-20230908155931074.png)
+
+
+
+* SET SVN：服务器端SVN路径
+* SET DIR：服务器端项目运行目录
+* SVN update：通过update指令实时更新数据到DIR目录中
+
+
+
+3. 在apache目录创建Shop项目并更新SVN服务端数据到本地
+4. 更新文件到SVN服务器端，可以在Shop目录实时获取到最新数据
+
+
+
+
+
+
+
+
+
+# SVN扩展程序
+
+## BAE云引擎
+
+### 概述
+
+百度应用引擎（BAE）是百度推出的网络应用开发平台。基于BAE架构，使开发者不需要维护任何服务器，只需要简单的上传应用程序，就可以为用户提供服务
+
+开发者可以基于BAE平台进行PHP、Java、Python、Nodejs应用的开发、编译、发布、调试
+
+
+
+### 地址
+
+http://bce.baidu.com/
+
+
+
+### 使用BAE云引擎
+
+打开官网
+
+![image-20230908160347135](img/SVN学习笔记/image-20230908160347135.png)
+
+
+
+
+
+
+
+
+
+点击产品
+
+![image-20230908160500293](img/SVN学习笔记/image-20230908160500293.png)
+
+
+
+
+
+点击搜索
+
+![image-20230908160540959](img/SVN学习笔记/image-20230908160540959.png)
+
+
+
+
+
+包年包月计费
+
+| CPU规格 （核） | 内存规格（GB） | 硬盘规格（GB） | 包月价格（元/月） | 包年价格（元/年） |
+| -------------- | -------------- | -------------- | ----------------- | ----------------- |
+| 1              | 1              | 20             | 284               | 3408              |
+| 1              | 2              | 20             | 424.76            | 5000              |
+| 1              | 4              | 20             | 732.56            | 8328.10           |
+| 2              | 2              | 20             | 541.73            | 6158.59           |
+| 2              | 4              | 20             | 849.53            | 9657.79           |
+| 2              | 8              | 20             | 1465.13           | 16656.19          |
+| 2              | 12             | 20             | 2080.73           | 23654.59          |
+| 2              | 16             | 20             | 2696.33           | 30652.99          |
+| 4              | 4              | 20             | 1083.46           | 12317.18          |
+| 4              | 8              | 20             | 1699.06           | 19315.58          |
+| 4              | 12             | 20             | 2314.66           | 26313.98          |
+| 4              | 16             | 20             | 2930.26           | 33312.38          |
+| 4              | 32             | 20             | 5392.66           | 61305.98          |
+| 8              | 8              | 20             | 2166.91           | 24634.37          |
+| 8              | 12             | 20             | 2782.51           | 31632.77          |
+| 8              | 16             | 20             | 3398.11           | 38631.17          |
+| 8              | 24             | 20             | 4629.31           | 52627.97          |
+| 8              | 32             | 20             | 5860.51           | 66624.77          |
+| 8              | 64             | 20             | 10785.31          | 122611.96         |
+| 12             | 12             | 20             | 3250.37           | 36951.55          |
+| 12             | 16             | 20             | 3865.97           | 43949.95          |
+| 12             | 24             | 20             | 5097.17           | 57946.75          |
+| 12             | 32             | 20             | 6328.36           | 71943.55          |
+| 12             | 48             | 20             | 8790.77           | 99937.15          |
+| 12             | 64             | 20             | 11253.17          | 127930.75         |
+| 16             | 16             | 20             | 4333.82           | 49268.73          |
+| 16             | 24             | 20             | 5565.02           | 63265.54          |
+| 16             | 32             | 20             | 6796.22           | 77262.34          |
+| 16             | 48             | 20             | 9258.62           | 105255.93         |
+| 16             | 64             | 20             | 11721.02          | 133249.53         |
+
+
+
+按需计费
+
+| 套餐名称 | CPU  | 内存（GB） | 硬盘（GB） | 公网带宽（Mbps） | 单价（元/分钟） | 小时参考价（元/小时） |
+| -------- | ---- | ---------- | ---------- | ---------------- | --------------- | --------------------- |
+| 启航I型  | 1核  | 1          | 20         | 1                | 0.0066          | 0.396                 |
+| 启航II型 | 1核  | 2          | 20         | 1                | 0.01035         | 0.621                 |
+| 进取I型  | 2核  | 4          | 20         | 1                | 0.0207          | 1.242                 |
+| 进取II型 | 2核  | 8          | 20         | 1                | 0.0357          | 2.142                 |
+
+
+
+点击购买
+
+![image-20230908161040355](img/SVN学习笔记/image-20230908161040355.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
