@@ -12,6 +12,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 概述
 
 SVN全称SubVersion
@@ -1872,3 +1890,359 @@ http://bce.baidu.com/
 
 
 
+# Docker安装SVN服务端
+
+## 部署步骤
+
+### 查找镜像
+
+```sh
+docker search svn
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker search svn
+NAME                           DESCRIPTION                                      STARS     OFFICIAL   AUTOMATED
+atlassian/fisheye              Fisheye: search, monitor, and track across S…   6
+svnedge/app                    SVN Edge Official Release Image                  22
+elleflorio/svn-server          Lightweight Docker container running an SVN …   82
+crazymax/svn2git-mirror        Mirror SVN repositories to Git periodically      0
+ksaito1125/svn-resource-type   concourseのresource-typeです。 Subversionリ…    1                    [OK]
+jgsqware/svn-client            A Simple SVN client based on Alpine              3                    [OK]
+garethflowers/svn-server       A simple Subversion server, using `svnserve`.    94                   [OK]
+krisdavison/svn-server         A pre-configured SVN source control server.      28
+takanomasaki/svn-resource                                                       0
+svnedge/devbuild               SVN Edge Development Build                       0
+aneesv/svn-client              Svn Client                                       2                    [OK]
+ryandocker/svn2git             Docker wrapper around the svn2git tool.          4
+nbrun/svn-client               Old SVN clients to work with old svn reposit…   5
+svnovikov/test                                                                  0
+yodamad/svn2git                Tool to help migration from SVN to Gitlab        2
+polinux/svn2git                svn2git in a docekr (Alpine)                     2                    [OK]
+paulovsm/svn-server            Subversion + Apache + SVNAdmin                   10
+timimages/svn                                                                   0
+svnbadrinath/hello_world                                                        0
+marouen13/svn-mar              an svn image                                     0
+0urob0r0s/svndaemon            Container agent for a simple, repo-based con…   0
+yukinagae/svn-to-git                                                            0                    [OK]
+vertigo/svn2git                A minimalist container to use the (awesome) …   1                    [OK]
+kurento/svn-client                                                              0
+cycletime/svn-test             SVN Server with Test Data                        0
+PS C:\Users\mao\Desktop>
+```
+
+
+
+### 拉取镜像
+
+```sh
+docker pull docker.io/garethflowers/svn-server
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker pull docker.io/garethflowers/svn-server
+Using default tag: latest
+latest: Pulling from garethflowers/svn-server
+97518928ae5f: Pull complete
+220c89cd47cb: Pull complete
+ff53bd3381be: Pull complete
+Digest: sha256:8ea951502181e9565a7d770c9a75f5c42955057d9ec260d681004e935e16eca9
+Status: Downloaded newer image for garethflowers/svn-server:latest
+docker.io/garethflowers/svn-server:latest
+
+What's Next?
+  View summary of image vulnerabilities and recommendations → docker scout quickview docker.io/garethflowers/svn-server
+PS C:\Users\mao\Desktop>
+```
+
+
+
+
+
+### 查看镜像
+
+```sh
+docker images
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker images
+REPOSITORY                                                TAG                                                                          IMAGE ID       CREATED          SIZE
+mysql-jxstar                                              latest                                                                       945a899571c2   47 minutes ago   448MB
+nginx                                                     <none>                                                                       89da1fb6dcb9   6 weeks ago      187MB
+hubproxy.docker.internal:5555/docker/desktop-kubernetes   kubernetes-v1.27.2-cni-v1.2.0-critools-v1.27.0-cri-dockerd-v0.3.2-1-debian   c763812a4530   3 months ago     418MB
+registry.k8s.io/kube-apiserver                            v1.27.2                                                                      c5b13e4f7806   3 months ago     121MB
+registry.k8s.io/kube-controller-manager                   v1.27.2                                                                      ac2b7465ebba   3 months ago     112MB
+registry.k8s.io/kube-scheduler                            v1.27.2                                                                      89e70da428d2   3 months ago     58.4MB
+registry.k8s.io/kube-proxy                                v1.27.2                                                                      b8aa50768fd6   3 months ago     71.1MB
+docker/desktop-vpnkit-controller                          dc331cb22850be0cdd97c84a9cfecaf44a1afb6e                                     556098075b3d   3 months ago     36.2MB
+nginx                                                     <none>                                                                       6efc10a0510f   4 months ago     142MB
+registry.k8s.io/ingress-nginx/controller                  v1.6.4                                                                       7744eedd958f   6 months ago     282MB
+registry.k8s.io/coredns/coredns                           v1.10.1                                                                      ead0a4a53df8   7 months ago     53.6MB
+registry.k8s.io/etcd                                      3.5.7-0                                                                      86b6af7dd652   7 months ago     296MB
+hubproxy.docker.internal:5000/docker/desktop-kubernetes   kubernetes-v1.25.4-cni-v1.1.1-critools-v1.25.0-cri-dockerd-v0.2.6-1-debian   2511e1796e7d   9 months ago     398MB
+registry.k8s.io/kube-apiserver                            v1.25.4                                                                      00631e54acba   10 months ago    128MB
+registry.k8s.io/kube-scheduler                            v1.25.4                                                                      e2d17ec744c1   10 months ago    50.6MB
+registry.k8s.io/kube-controller-manager                   v1.25.4                                                                      8f59f6dfaed6   10 months ago    117MB
+registry.k8s.io/kube-proxy                                v1.25.4                                                                      2c2bc1864279   10 months ago    61.7MB
+registry.k8s.io/pause                                     3.9                                                                          e6f181688397   10 months ago    744kB
+registry.k8s.io/etcd                                      3.5.5-0                                                                      4694d02f8e61   11 months ago    300MB
+registry.k8s.io/pause                                     3.8                                                                          4873874c08ef   14 months ago    711kB
+registry.k8s.io/coredns/coredns                           v1.9.3                                                                       5185b96f0bec   15 months ago    48.8MB
+kubernetesui/dashboard                                    v2.5.1                                                                       7fff914c4a61   18 months ago    243MB
+busybox                                                   latest                                                                       beae173ccac6   20 months ago    1.24MB
+nginx                                                     latest                                                                       605c77e624dd   20 months ago    141MB
+tomcat                                                    8.5                                                                          2d2bccf89f53   20 months ago    678MB
+mysql                                                     5.7                                                                          c20987f18b13   20 months ago    448MB
+garethflowers/svn-server                                  latest                                                                       8f67c47addf7   22 months ago    14.8MB
+redislabs/rebloom                                         latest                                                                       66d626dc1387   22 months ago    147MB
+centos                                                    latest                                                                       5d0da3dc9764   24 months ago    231MB
+kubernetesui/metrics-scraper                              v1.0.7                                                                       7801cfc6d5c0   2 years ago      34.4MB
+docker/desktop-vpnkit-controller                          v2.0                                                                         8c2c38aa676e   2 years ago      21MB
+docker/desktop-storage-provisioner                        v2.0                                                                         99f89471f470   2 years ago      41.9MB
+registry.k8s.io/ingress-nginx/kube-webhook-certgen        v1.5.2                                                                       a573628e4199   2 years ago      29.7MB
+hashicorp/http-echo                                       latest                                                                       a6838e9a6ff6   6 years ago      3.97MB
+PS C:\Users\mao\Desktop>
+```
+
+
+
+成功拉取下来
+
+
+
+### 运行容器
+
+```sh
+docker run -v D:/Docker/svn:/var/opt/svn --name svn-server -p 3793:3690 --privileged=true -e SVN_REPONAME=repository -d docker.io/garethflowers/svn-server
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker run -v D:/Docker/svn:/var/opt/svn --name svn-server -p 3793:3690 --privileged=true -e SVN_REPONAME=repository -d
+ docker.io/garethflowers/svn-server
+4489732e74c58ca3273c8d2524159b24d873cade52734e5ac62cbe126516caa7
+PS C:\Users\mao\Desktop>
+```
+
+
+
+-e：传递key-value形式的环境变量，这里指定仓库名为 repository
+
+
+
+### 查看容器是否运行
+
+```sh
+docker ps
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker ps
+CONTAINER ID   IMAGE                      COMMAND                   CREATED          STATUS                    PORTS
+   NAMES
+4489732e74c5   garethflowers/svn-server   "/usr/bin/svnserve -…"   39 seconds ago   Up 37 seconds (healthy)   0.0.0.0:3793->3690/tcp
+  svn-server
+806eae75caaf   7fff914c4a61               "/dashboard --insecu…"   41 minutes ago   Up 41 minutes
+  k8s_kubernetes-dashboard_kubernetes-dashboard-68955f84f4-ccwfd_kubernetes-dashboard_fd1c36df-d824-4d4f-a52a-a5f7152d8fa2_48
+1495ec535f5b   7801cfc6d5c0               "/metrics-sidecar"        42 minutes ago   Up 42 minutes
+   k8s_dashboard-metrics-scraper_dashboard-metrics-scraper-748b4f5b9d-g4h26_kubernetes-dashboard_b76f2aa6-e30a-40f8-b865-2a9a97796ee0_26
+54c91083e4ba   mysql:5.7                  "docker-entrypoint.s…"   11 days ago      Up 55 minutes             33060/tcp, 0.0.0.0:3307->3306/tcp   mysql1
+PS C:\Users\mao\Desktop>
+```
+
+
+
+
+
+### 进入容器内部
+
+```sh
+docker exec -it svn-server /bin/sh
+```
+
+```sh
+PS C:\Users\mao\Desktop> docker exec -it svn-server /bin/sh
+/var/opt/svn # ls
+/var/opt/svn # pwd
+/var/opt/svn
+/var/opt/svn #
+```
+
+
+
+
+
+### 创建仓库
+
+```sh
+svnadmin create /var/opt/svn/repository
+```
+
+```sh
+/var/opt/svn # svnadmin create /var/opt/svn/repository
+/var/opt/svn # ls -l
+total 0
+drwxr-xr-x    1 root     root          4096 Sep  8 08:30 repository
+/var/opt/svn # cd repository
+/var/opt/svn/repository # ls -l
+total 0
+-rw-r--r--    1 root     root           246 Sep  8 08:30 README.txt
+drwxr-xr-x    1 root     root          4096 Sep  8 08:30 conf
+drwxr-sr-x    1 root     root          4096 Sep  8 08:30 db
+-r--r--r--    1 root     root             2 Sep  8 08:30 format
+drwxr-xr-x    1 root     root          4096 Sep  8 08:30 hooks
+drwxr-xr-x    1 root     root          4096 Sep  8 08:30 locks
+/var/opt/svn/repository #
+```
+
+
+
+
+
+### 编辑资源库配置
+
+```sh
+/var/opt/svn/repository # cd conf
+/var/opt/svn/repository/conf # ll
+/bin/sh: ll: not found
+/var/opt/svn/repository/conf # ls -l
+total 16
+-rw-r--r--    1 root     root          1080 Sep  8 08:30 authz
+-rw-r--r--    1 root     root           885 Sep  8 08:30 hooks-env.tmpl
+-rw-r--r--    1 root     root           309 Sep  8 08:30 passwd
+-rw-r--r--    1 root     root          4375 Sep  8 08:30 svnserve.conf
+/var/opt/svn/repository/conf # vi svnserve.conf
+```
+
+
+
+按`i`键，编辑后按`：`键，输入`wq`回车
+
+![image-20230908163354544](img/SVN学习笔记/image-20230908163354544.png)
+
+
+
+
+
+### 退出容器
+
+```sh
+exit
+```
+
+
+
+
+
+### 重启容器
+
+```sh
+docker restart svn-server
+```
+
+
+
+
+
+## 客户端连接
+
+需要指定端口
+
+![image-20230908163830012](img/SVN学习笔记/image-20230908163830012.png)
+
+
+
+![image-20230908164244131](img/SVN学习笔记/image-20230908164244131.png)
+
+
+
+连接成功
+
+
+
+
+
+# idea集成SVN
+
+## 步骤
+
+点击VCS
+
+![image-20230908164440419](img/SVN学习笔记/image-20230908164440419.png)
+
+
+
+点击启用版本控制集成
+
+![image-20230908164530384](img/SVN学习笔记/image-20230908164530384.png)
+
+
+
+
+
+选择SVN
+
+![image-20230908164555859](img/SVN学习笔记/image-20230908164555859.png)
+
+
+
+![image-20230908165220605](img/SVN学习笔记/image-20230908165220605.png)
+
+
+
+导入
+
+![image-20230908165306082](img/SVN学习笔记/image-20230908165306082.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+end
+
+---
+by  mao
+2023  09  08
+
+---
